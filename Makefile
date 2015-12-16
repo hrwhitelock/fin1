@@ -23,7 +23,7 @@ CFLAGS    = -Weverything -Wextra -pedantic $(LDFLAGS)
 
 .PHONY: edit clean veryclean
 
-target    = hw04
+target    = fin1Main
 
 $(target) : $(target).c
 
