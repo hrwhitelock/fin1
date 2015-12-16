@@ -1,39 +1,32 @@
-#
-# Download and place this file into your git repository. 
-# Rename it to 'Makefile' (without quotes)
-#
-# wget http://www.phys.uconn.edu/phys2200/downloads/Makefile.sample
-# mv Makefile.sample Makefile
-#
-# or
-#
-# wget http://www.phys.uconn.edu/phys2200/downloads/Makefile.sample -O Makefile
-#
+# Makefile for pi calculation via polygon perimeter and the corresponding docs
 
-EDITOR = /usr/bin/vim
-INDENT = /usr/bin/indent
+GNUPLOT = gnuplot
 
 CC        = clang
-LDFLAGS   = -O
-LDFLAGS   = -lm
-CFLAGS    = -Weverything -Wextra -pedantic $(LDFLAGS)
+LDFLAGS   = -O3
+ifeq ($(CC),clang)
+  CFLAGS  = -Weverything -Wextra -pedantic $(LDFLAGS)
+else
+  CFLAGS  = -Wall -Wextra -pedantic $(LDFLAGS)
+endif
+LDLIBS    = -lm
 
 .SUFFIXES:
-.SUFFIXES:  .c .o .h
+.SUFFIXES:  .c .o .gp
 
-.PHONY: edit clean veryclean
+.PHONY: clean veryclean
 
-target    = fin1Main
+%.res: %.c
+	$(CC) $(CFLAGS) $< -o $* $(LDLIBS)
+	./$* > $*.res
+	rm -f ./$*
 
-$(target) : $(target).c
+pdf: pi-poly-u.res
+	$(GNUPLOT) pi-poly-u.gp
 
-edit : $(target).c
-	$(EDITOR) $<
-	$(INDENT) $<
-
-clean : 
-	rm -f *.o
+clean: 
 	rm -f *.*~
+	rm -f *.o
 
 veryclean : clean
-	rm  -f $(target)
+	rm -f pi-poly-u.res pi-poly-u.pdf pi-poly
